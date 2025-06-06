@@ -1,0 +1,22 @@
+[project]
+name = "openai-sms-sample"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "azure-communication-sms>=1.1.0",
+    "azure-identity>=1.21.0",
+    "fastapi[standard]>=0.115.12",
+    "openai>=1.76.2",
+    "python-dotenv>=1.1.0",
+    "uvicorn>=0.34.2",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
