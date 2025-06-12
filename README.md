@@ -2,7 +2,7 @@
 
 This application provides an API endpoint to receive SMS events from Azure Communication Services, such as delivery reports and incoming messages, and a mobile web interface for ID photo uploads.
 
-![SMS Receiver Interface](sms-screenshot.png)
+<img src="sms-screenshot.png" alt="SMS Receiver Interface" width="300"/>
 
 ## Features
 
