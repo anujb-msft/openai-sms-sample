@@ -2,27 +2,26 @@
 
 This application provides an API endpoint to receive SMS events from Azure Communication Services, such as delivery reports and incoming messages, and a mobile web interface for ID photo uploads.
 
+![SMS Receiver Interface](sms-screenshot.png)
+
 ## Features
 
 - FastAPI endpoint to receive webhook notifications from Azure Communication Services
-- Processes SMS delivery reports
-- Background task processing for webhook events
-- Logging of received SMS events
-- Automatically handles Azure Event Grid subscription validation
 - AI-powered responses to incoming SMS messages using Azure OpenAI
 - Conversation history management for maintaining context across SMS exchanges
 - Mobile-friendly web interface for users to upload ID photos
 
-## Setup
+## Setup instructions
 
 ### Prerequisites
 
 - Python 3.13 or higher
 - An Azure account with Azure Communication Services configured
 - Azure Communication Services connection string or managed identity credentials
+- Azure Communication Services phone number with SMS capabilities. 
 - Azure OpenAI service configured
 
-### Environment Variables
+### 1. Environment Variables
 
 Set up the following environment variables:
 
@@ -41,36 +40,15 @@ export AZURE_OPENAI_KEY="your_openai_api_key"
 export PHONE_NUMBER="+1234567890"
 ```
 
-## Usage
 
-### Running the API in the local developer environment
+### 2. Run server in your local developer environment
 
 ```bash
 # Run the FastAPI server
 uv run fastapi dev
 ```
 
-This will start the server at http://0.0.0.0:8000
-
-### Configuring Azure Communication Services Webhook
-
-To receive SMS events in your API, you need to set up an Event Grid subscription in Azure:
-
-1. Go to your Azure Communication Services resource in the Azure portal
-2. Click on "Events" in the left navigation
-3. Click "Event Subscriptions" and then "Add Event Subscription"
-4. Configure the subscription:
-   - Name: Give it a descriptive name like "SMSWebhook"
-   - Event Schema: Event Grid Schema
-   - Filter to Event Types: Select "SMS Received" and "SMS Delivery Report Received"
-   - Endpoint Type: Select "Web Hook"
-   - Endpoint: Enter your API URL, e.g., `https://your-server.com/api/sms/webhook`
-
-5. Click "Create" to create the event subscription
-
-Ensure your API is publicly accessible or use a service like Azure Dev Tunnels for local testing.
-
-### Testing Webhook Locally
+### 3. Create & host dev tunnel
 
 For local development, you can use Azure Dev Tunnels to expose your local server to the internet:
 
@@ -87,7 +65,29 @@ devtunnel port create -p 8000
 devtunnel host
 ```
 
-Use the generated tunnel URL for your webhook endpoint in Azure Event Grid configuration. The URL will be in the format: `https://<tunnel-id>.<region>.azurewebsites.net`
+Take note of the public dev tunnel URL as you'll need it in the proceeding webhook configuration step. The URL will be in the format: `https://<tunnel-id>-<port>.<region>.devtunnels.ms`
+
+
+Navigate to your dev tunnel via the URL to ensure it's running correctly. 
+
+
+### 4. Configuring Azure Communication Services Webhook
+
+To receive SMS events in your API, you need to set up an Event Grid subscription in Azure:
+
+1. Go to your Azure Communication Services resource in the Azure portal
+2. Click on "Events" in the left navigation
+3. Click "Event Subscriptions" and then "Add Event Subscription"
+4. Configure the subscription:
+   - Name: Give it a descriptive name like "SMSWebhook"
+   - Event Schema: Event Grid Schema
+   - Filter to Event Types: Select "SMS Received" and "SMS Delivery Report Received"
+   - Endpoint Type: Select "Web Hook"
+   - Endpoint: Enter your API URL by taking the dev tunnel URL from the preceeding step and appending the path `/api/sms/webhook` ex: `https://abcdef-8000.devtunnels.ms/api/sms/webhook`
+
+5. Click "Create" to create the event subscription
+
+The app should now be running. You can now use your mobile device to interact with the app via SMS. 
 
 ## SMS Response with Azure OpenAI
 
@@ -99,12 +99,6 @@ This application uses Azure OpenAI to automatically respond to incoming SMS mess
 
 Make sure your Azure OpenAI service is properly configured with a deployment of a model like GPT-4.
 
-1. Go to your Azure Communication Services resource in the Azure portal
-2. Navigate to "Events" section
-3. Add a webhook subscription for SMS events
-4. Set the webhook URL to your publicly accessible endpoint: `https://your-domain.com/api/sms/webhook`
-   - For development, you can use Azure Dev Tunnels to expose your local server: `az devenvironment tunnel port forward --name http --port-uri http://localhost:8000`
-5. Configure the event types you want to receive (e.g., SMS Delivery Report)
 
 ## API Endpoints
 
