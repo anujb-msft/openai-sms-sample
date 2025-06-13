@@ -65,7 +65,7 @@ devtunnel port create -p 8000
 devtunnel host
 ```
 
-Take note of the public dev tunnel URL as you'll need it in the proceeding webhook configuration step. The URL will be in the format: `https://<tunnel-id>-<port>.<region>.devtunnels.ms`
+Take note of the public dev tunnel URL as you'll need it in the next step. The URL will be in the format: `https://<tunnel-id>-<port>.<region>.devtunnels.ms`
 
 
 Navigate to your dev tunnel via the URL to ensure it's running correctly. 
